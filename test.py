@@ -66,4 +66,3 @@ print (reset)
 check_exists_roll (roll)
 
 
-cursor.close() 

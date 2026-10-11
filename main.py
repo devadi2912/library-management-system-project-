@@ -12,6 +12,8 @@ if db == None :
 
 # creating the cursor to execute sql commands .. 
 cursor = db.cursor(dictionary=True)
+cursor.execute("""use hello_world;""")
+
 
 # this main file will have indivisual modules that handle all the functions of the library management system 
 def display_student ():
@@ -88,10 +90,11 @@ def menu ():
                     print (f"{blue}it appears that you have types an {red}invlaid choice{blue} try again {reset}\n")
             # break ; 
         
-        
-        
-        
-        
-        
-menu () 
 cursor.close(); 
+        
+        
+        
+if __name__ == "__main__":
+    menu()
+        
+ 

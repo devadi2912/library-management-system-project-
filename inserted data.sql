@@ -196,6 +196,27 @@ set available = total
 where available < total ;   -- setting the value of total and available to be teh same at the start of the project 
 
 
+update books 
+set subject = "programming"
+where subject in ( "Python" , "java" , "c" , "c++" , "javascript" , "node.js" , "react" , "programming" , "r" );
+
+update books 
+set subject = "database"
+where subject in ( "sql" , "dbms" , "big data" , "mysql" , "postgresql" , "mongodb" );
+
+update books 
+set subject = "maths"
+where subject in ( "mathematics" , "probability" , "statictics" );
+
+update books 
+set subject = "developement"
+where subject in ( "devops" , "docker" ,"linux","git","github","api","fastapi","tensorflow","pytorch","web" ,"cloud","blockchain");
+
+update books 
+set subject = "AIML"
+where subject in ( "ai" , "ml" ,"nlp","ds" );
+
+
 -- displaying all the data in the tables 
 select * from books;
 select * from student; 

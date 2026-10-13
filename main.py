@@ -1,17 +1,10 @@
-from connect import database_connect
+# main.py
+from connect import db
 from color import * 
 from display_student import *
-# this recursively imports all the files imported in the connect folder as well for example the color values from color.py 
+from display_books import *
 
-db = None  # initial initialization of the database value 
-
-if db == None :
-    db = database_connect ()
-    if db == None :
-        print (f"error in connection :")  
-        exit (0)
-
-# creating the cursor to execute sql commands .. 
+# creating the cursor to execute sql commands in main
 cursor = db.cursor(dictionary=True)
 cursor.execute("""use hello_world;""")
 
@@ -34,7 +27,7 @@ def display_student ():
         print (f"enter {yellow} 9 {reset} to check is the student with a given roll exists ")
         print (f"enter {yellow} 10 {reset} to view the top borrowers (students with the most pending books) ")
         print (f"enter {yellow}-10{reset} to exit the library ")
-        choice = int (input(f"enter your desired task number :{yellow}"))
+        choice = int (input(f"{magenta}enter your desired task number :{yellow}"))
         print (reset)
         match choice :
             case 1:
@@ -53,7 +46,7 @@ def display_student ():
             case 5:
                 n = int(input(f"display student with no of pending books greater than or equal to :{yellow}"))
                 print (reset)
-                student_with_pending(n=2) 
+                student_with_pending(n) 
             case 6:
                 student_with__nopending() 
             case 7:
@@ -78,11 +71,94 @@ def display_student ():
             case _:
                 print ()
                 print (f"{blue}it appears that you have typed an {red}invlaid choice{blue} please try again {reset}\n") 
-    pass 
+    
+
 
 def display_books ():
-    pass 
-
+    try :
+       print (f"{green}books display menu{reset}")
+       while True :
+           # this is a match case in python to print the menu and to direct the user to the task they want to perform 
+       
+           print (f"{blue}please select from the following tasks you would like to perform !{reset}")
+           print (f"enter {yellow} 1 {reset} to view all books ")
+           print (f"enter {yellow} 2 {reset} to view all distinct subjects of books in the library ")
+           print (f"enter {yellow} 3 {reset} to view books of a specific subject ")
+           print (f"enter {yellow} 4 {reset} to view all distinct authors ")
+           print (f"enter {yellow} 5 {reset} to view number of books for each subject ")
+           print (f"enter {yellow} 6 {reset} to view number of books for a specific subject")
+           print (f"enter {yellow} 7 {reset} to view the book of a specific author")
+           print (f"enter {yellow} 8 {reset} to view the books in a specific price range ")
+           print (f"enter {yellow} 9 {reset} to view all available books ")
+           print (f"enter {yellow} 10 {reset} to search book of a specific id")
+           print (f"enter {yellow} 11 {reset} to search book with a title")
+           print (f"enter {yellow} 12 {reset} to view books with a specific availability")
+           print (f"enter {yellow} 13 {reset} to check if a book exists ")
+           print (f"enter {yellow}-10{reset} to exit the library ")
+           choice = int (input(f"{magenta}enter your desired task number :{yellow}")) 
+           print (reset)
+           match choice :
+               case 1:
+                   display_all_books()
+               case 2:
+                   display_distinct_subjects()
+               case 3 :
+                   subject = input (f"enter the subject you want to search for :{yellow}")
+                   subject = subject.strip()
+                   print (reset)
+                   display_books_of_subject(subject)
+               case 4 :
+                   display_distinct_authors()
+               case 5 :
+                   display_count_all_subject_books()
+               case 6 :
+                   subject = input (f"enter the subject for which number of books should be printed :{yellow}")
+                   subject = subject.strip()
+                   print (reset)
+                   display_count_books_of_subject(subject)
+                   # display_count_books_of_subject("engineering") 
+               case 7 :
+                   author = input (f"enter the authour name of the books u want displayed :{yellow}")
+                   author = author.strip()
+                   print (reset)
+                   display_books_by_author(author)
+               case 8 :
+                   low = int (input (f"enter the lower limit to the price range : {yellow}"))
+                   high = int (input (f"{reset}enter the upper limit to the price range :{yellow}"))
+                   print (reset)
+                   display_books_with_price_range ( low, high) 
+               case 9 :
+                   available_books()
+               case 10 :
+                   title = input (f"please enter the title of the book you want to search for :{yellow}")
+                   title = title.strip()
+                   fetch_book_by_title(title) 
+               case 11 :
+                   id = input (f"please enter the book_id of the book you want to search for :{yellow}")
+                   print (reset)
+                   fetch_book_by_title(id) 
+                   pass 
+               case 12 :
+                   avail = int (input(f"enter the number of available copies that (available <= <value>):{yellow}")) 
+                   print (reset)
+                   books_with_availability_custom(avail)
+               case 13 :
+                   title = input (f"enter the title of the book whose existence is to be checked :{yellow}")
+                   title = title.strip()
+                   check_exists_book(title)
+               case -10 :
+                   print ()
+                   print (f"{green}exiting the student view !{reset}")
+                   print ()
+                   break  
+               case _:
+                   print ()
+                   print (f"{blue}it appears that you have typed an {red}invlaid choice{blue} try again {reset}\n")            
+       
+    except Exception as err :
+        print (f"{red}error : {err}{reset}")
+       
+    
 def display_borrow ():
     pass 
 
@@ -122,13 +198,13 @@ def menu ():
             print (f"enter {yellow} 8 {reset} to return a book ")
             print (f"enter {yellow} 9 {reset} for records check ")
             print (f"enter {yellow}-10{reset} to exit the library ")
-            choice = int (input(f"enter your desired task number :{yellow}"))
+            choice = int (input(f"{magenta}enter your desired task number :{yellow}"))
             print (reset)
             match choice :
                 case 1:
                     display_student()
                 case 2:
-                    pass 
+                    display_books() 
                 case 3:
                     pass 
                 case 4:
@@ -159,4 +235,3 @@ cursor.close();
 if __name__ == "__main__":
     menu()
         
- 

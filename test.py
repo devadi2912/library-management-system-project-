@@ -23,46 +23,62 @@ for value in result :
     print (value)
 '''
 
-def formated_table (result):
-    print (f"{"roll":<6}{"name":<25}{"stream":<10}{"borrowed":10}{"returned":<10}{"pending":<10}")
-    for student in result :
-        print (f"{yellow}{student["roll"]:<6}{student["name"]:<25}{student["stream"]:<12}{student["borrowed"]:<10}{student["returned"]:<10}{student["pending"]:<10}{reset}")
+def formated_table_books (result):
+    print (f"{"book_id":<10}{"title":<30}{"author":<20}{"subject":13}{"type":<6}{"total":<7}{"avail":7}{"price":7}{"description":30}")
+    for book in result :
+        print (f"{yellow}{book["book_id"]:<10}{book["title"]:<30}{book["author"]:<20}{book["subject"]:<13}{book["type"]:<6}{book["total"]:<7}{book["available"]:<7}{book["price"]:<7}{book["description"]:<30}{reset}")
     print ()
-    
 
-def check_exists_roll (roll):
-    # this function will help check if the student exists in the table or not 
-    cursor_tuple  = db.cursor()    # using a new cursor that returned tuples to use the fetchone () value for exists more easily 
     
-    """ the local tuple returns tuples which are easier to access . 
-    for the rest of the program the nomral dictionary cursor is used for the easr of display """
-    query = """
-    select exists (
-        select 1
-        from student 
-        where roll = %s
-        );"""
-    cursor_tuple .execute(query , (roll,))
-    exists = cursor_tuple.fetchone()
-    print (exists)
-    print (exists[0])
-    # print (list(exists))
-    if exists[0] == 1 :
-        print (f"{green}student exists in the database :{reset}")
-        cursor.execute("""select * from student where roll = %s""", (roll,))
-        result = cursor.fetchall ()
-        formated_table (result)
-    else :
-        print (f"{yellow}student data dosent exist!")  
-        # print (f"{green}safe to insert.{reset}")
-          
-    
-    
-    
-# check_exists("where roll = 1052")
-print (f"{blue}searching for the student where :{reset}")
-roll = input(f"roll :{yellow}")
-print (reset)
-check_exists_roll (roll)
+def display_all_books ():
+    try :
+        cursor.execute ("select * from books;")
+        result = cursor.fetchall()
+        formated_table_books(result)
+        # print (f"{yellow}{result}{reset}")
+    except Exception as err :
+        print (f"{red}error :{err}{reset}")
+ 
+display_all_books()
+  
 
+
+# prints all available books 
+def available_books ():
+    try :
+        query = "select * from books where available > 0;"
+        cursor.execute (query )
+        result = cursor.fetchall()
+        print (f"{blue}the books that are available in the library are as follows :{reset}")
+        formated_table_books (result)
+    except Exception as err :
+        print (f"{red}error : {err}{reset}")
+        
+# available_books()
+
+
+def check_exists_book (title):
+    try :
+        cursor_tuple = db.cursor()
+        query = """select exists (
+            select 1 
+            from books 
+            where title = %s)"""
+        cursor_tuple.execute (query, (title,))
+        exist = cursor_tuple.fetchone ()
+        # print (exist)      # this is a tuple 
+        if exist[0] == 1 :
+            print (f"{green}book found !{reset}")
+            cursor.execute ("select * from books where title = %s;",(title,))
+            result = cursor.fetchall()
+            
+            formated_table_books(result)
+        else :
+            print (f"{red}book not found in databse !{reset}")
+    except Exception as err :
+        print (f"{red}error : {err}{reset}")
+    finally :
+        cursor_tuple.close()
+        
+# check_exists_book ("Introduction to Algorithms") 
 

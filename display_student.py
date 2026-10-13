@@ -1,8 +1,16 @@
 # this file will have all the display functions related to the student table 
-from main import db , cursor 
+# from main import db , cursor 
+"""
+do not import from main function this leads to a circular import problem that is a viscious cycle 
+instead import the connections from the connect fiel directly """
+
+# display_student.py
+from connect import db
 from color import *
 
-cursor = db.cursor(dictionary= True)  # reestablishing the link is the cursor got disconnected in any way .. 
+# Create a cursor for this module using the db instance imported 
+cursor = db.cursor(dictionary=True)
+
 
 
 def formated_table (result):
@@ -61,9 +69,14 @@ def student_with_pending (num = 0):
         query = """select * from student where pending >= %s ; """
         cursor.execute(query,(num,))
         result = cursor.fetchall()
-        formated_table (result)
+        if result :
+            formated_table (result)
+        else :
+            print (f"{red}no student with the parameters mentioned found !{reset}")
+            print ()
     except Exception as err :
         print (f"{red}error : {err}{reset}")
+    
     
     
 def student_with__nopending ():

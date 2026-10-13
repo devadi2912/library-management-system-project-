@@ -23,62 +23,48 @@ for value in result :
     print (value)
 '''
 
-def formated_table_books (result):
-    print (f"{"book_id":<10}{"title":<30}{"author":<20}{"subject":13}{"type":<6}{"total":<7}{"avail":7}{"price":7}{"description":30}")
-    for book in result :
-        print (f"{yellow}{book["book_id"]:<10}{book["title"]:<30}{book["author"]:<20}{book["subject"]:<13}{book["type"]:<6}{book["total"]:<7}{book["available"]:<7}{book["price"]:<7}{book["description"]:<30}{reset}")
+def formated_table_borrow (result):
+    print (f"{"id":<4}{"name":<23}{"roll":<6}{"title":30}{"book_id":<10}{"issue_date":<13}{"fine":7}")
+    for entry in result :
+        print (f"{yellow}{entry["id"]:<4}{entry["name"]:<23}{entry["roll"]:<6}{entry["title"]:<30}{entry["book_id"]:<10}{entry["issue_date"].strftime("%d-%m-%y"):<13}{entry["fine"]:<7}")
     print ()
 
-    
-def display_all_books ():
+def display_all_borrow ():
     try :
-        cursor.execute ("select * from books;")
+        query = "select * from borrow ;"
+        cursor.execute(query)
         result = cursor.fetchall()
-        formated_table_books(result)
-        # print (f"{yellow}{result}{reset}")
+        print (f"{yellow}{result}{reset}")
+        formated_table_borrow(result)
+    except Exception as err :
+        print (f"{red}error : {err}{reset}")
+        
+# display_all_borrow()
+
+
+
+def count_no_of_borrowed (name):
+    try :
+        query = """select name , count(book_id)
+        from borrow 
+        where name = %s 
+        group by name ; """
+        cursor.execute(query, (name,))
+        result = cursor.fetchall()
+        print (result )
+        if result :
+            print (f"{green}borrow records found for the student {reset}{name}{green} currently{reset}")
+            print (f"{"name":<23}{"count(book_id)"}")
+            for i in result :
+                print (f"{yellow}{i["name"]:<23}{i["count(book_id)"]}{reset}")
+            # formated_table_borrow(result)
+        else :
+            print (f"{red}no borrow recorder found for the student {reset}{name}")
     except Exception as err :
         print (f"{red}error :{err}{reset}")
- 
-display_all_books()
-  
-
-
-# prints all available books 
-def available_books ():
-    try :
-        query = "select * from books where available > 0;"
-        cursor.execute (query )
-        result = cursor.fetchall()
-        print (f"{blue}the books that are available in the library are as follows :{reset}")
-        formated_table_books (result)
-    except Exception as err :
-        print (f"{red}error : {err}{reset}")
-        
-# available_books()
-
-
-def check_exists_book (title):
-    try :
-        cursor_tuple = db.cursor()
-        query = """select exists (
-            select 1 
-            from books 
-            where title = %s)"""
-        cursor_tuple.execute (query, (title,))
-        exist = cursor_tuple.fetchone ()
-        # print (exist)      # this is a tuple 
-        if exist[0] == 1 :
-            print (f"{green}book found !{reset}")
-            cursor.execute ("select * from books where title = %s;",(title,))
-            result = cursor.fetchall()
-            
-            formated_table_books(result)
-        else :
-            print (f"{red}book not found in databse !{reset}")
-    except Exception as err :
-        print (f"{red}error : {err}{reset}")
     finally :
-        cursor_tuple.close()
+        print ()
         
-# check_exists_book ("Introduction to Algorithms") 
-
+        
+        
+count_no_of_borrowed ("aarav sharma")

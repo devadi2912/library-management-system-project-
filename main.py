@@ -3,6 +3,7 @@ from connect import db
 from color import * 
 from display_student import *
 from display_books import *
+from display_borrow import *
 
 # creating the cursor to execute sql commands in main
 cursor = db.cursor(dictionary=True)
@@ -11,8 +12,9 @@ cursor.execute("""use hello_world;""")
 
 # this main file will have indivisual modules that handle all the functions of the library management system 
 def display_student ():
-    print (f"{green}student display menu{reset}")
+    
     while True :
+        print (f"{green}student display menu{reset}")
         # this is a match case in python to print the menu and to direct the user to the task they want to perform 
     
         print (f"{blue}please select from the following tasks you would like to perform !{reset}")
@@ -76,8 +78,9 @@ def display_student ():
 
 def display_books ():
     try :
-       print (f"{green}books display menu{reset}")
+      
        while True :
+           print (f"{green}books display menu{reset}")
            # this is a match case in python to print the menu and to direct the user to the task they want to perform 
        
            print (f"{blue}please select from the following tasks you would like to perform !{reset}")
@@ -148,7 +151,7 @@ def display_books ():
                    check_exists_book(title)
                case -10 :
                    print ()
-                   print (f"{green}exiting the student view !{reset}")
+                   print (f"{green}exiting the books view !{reset}")
                    print ()
                    break  
                case _:
@@ -160,8 +163,75 @@ def display_books ():
        
     
 def display_borrow ():
-    pass 
-
+    try :
+       
+       while True :
+           print (f"{green}borrow display menu{reset}")
+           # this is a match case in python to print the menu and to direct the user to the task they want to perform 
+       
+           print (f"{blue}please select from the following tasks you would like to perform !{reset}")
+           print (f"enter {yellow} 1 {reset} to view all borrowed data ")
+           print (f"enter {yellow} 2 {reset} to view borrowed data for a specific roll no ")
+           print (f"enter {yellow} 3 {reset} to view borrowed data for a specific name")
+           print (f"enter {yellow} 4 {reset} to view borrowed data for a book title ")
+           print (f"enter {yellow} 5 {reset} to no of copies lent out for all books ")
+           print (f"enter {yellow} 6 {reset} to no of cpoies lent out for a specific book ")
+           print (f"enter {yellow} 7 {reset} to check if borrow any specific student borrowed a specific book title ")
+           print (f"enter {yellow} 8 {reset} to count no of borrowd books for a student name ")
+           
+           print (f"enter {yellow}-10{reset} to exit the library ")
+           choice = int (input(f"{magenta}enter your desired task number :{yellow}")) 
+           print (reset)
+           match choice :
+               case 1:
+                   display_all_borrow()
+               case 2:
+                   roll = int (input(f"enter the roll no of the student whose data u want to view :{yellow}"))
+                   print (reset)
+                   display_borrow_by_roll(roll)
+               case 3 :
+                   name = input (f"enter the name of the student whose data is to be displayed :{yellow}")
+                   name = name.strip()
+                   print (reset)
+                   display_borrow_by_name(name)
+               case 4 :
+                   title = input (f"enter the name of the books whose borrow data is to be displayed :{yellow}")
+                   title = title.strip()
+                   print (reset)
+                   display_borrow_by_title(title)
+               case 5:
+                    count_all_copies_of_books_lent ()
+               case 6:
+                    title = input (f"enter book name :{yellow}")
+                    title = title.strip()
+                    print (reset)
+                    count_copies_of_books_lent (title)
+                       
+               case 7 :
+                   print ("to check if a student has lent a particulat book please enter the following :")
+                   roll = int (input(f"student roll no :{yellow}"))
+                   book_id = int (input(f"{reset}book_id:{yellow}"))
+                   print ()
+                   check_exists_borrow(book_id , roll)
+                   
+               case 8 :
+                   name = input (f"enter the name of the student :{yellow}")
+                   name = name.strip()
+                   print (reset)
+                   count_no_of_borrowed(name)
+                  
+               case -10 :
+                    print ()
+                    print (f"{green}exiting the borrow view !{reset}")
+                    print ()
+                    break  
+               case _:
+                    print ()
+                    print (f"{blue}it appears that you have typed an {red}invlaid choice{blue} try again {reset}\n")            
+       
+    except Exception as err :
+        print (f"{red}error : {err}{reset}")
+       
 def update_student ():
     pass 
 
@@ -184,49 +254,49 @@ def records_check ():
 def menu ():
     
     print (f"{magenta} \t\t\t\t\t\tWELCOME TO THE LIBRARY ! {reset}")
-    print (f"{green}main menu{reset}")
     while True :
+        print (f"{green}main menu{reset}")
         # this is a match case in python to print the menu and to direct the user to the task they want to perform 
-            print (f"{blue}please select from the following tasks you would like to perform !{reset}")
-            print (f"enter {yellow} 1 {reset} to view student data ")
-            print (f"enter {yellow} 2 {reset} to view the books data ")
-            print (f"enter {yellow} 3 {reset} to view the data of lend out books data ")
-            print (f"enter {yellow} 4 {reset} to update student data ")
-            print (f"enter {yellow} 5 {reset} to update library data ")
-            print (f"enter {yellow} 6 {reset} to update the bdate of the books lend out ")
-            print (f"enter {yellow} 7 {reset} to issue a book ")
-            print (f"enter {yellow} 8 {reset} to return a book ")
-            print (f"enter {yellow} 9 {reset} for records check ")
-            print (f"enter {yellow}-10{reset} to exit the library ")
-            choice = int (input(f"{magenta}enter your desired task number :{yellow}"))
-            print (reset)
-            match choice :
-                case 1:
-                    display_student()
-                case 2:
-                    display_books() 
-                case 3:
-                    pass 
-                case 4:
-                    pass
-                case 5:
-                    pass 
-                case 6:
-                    pass 
-                case 7:
-                    pass 
-                case 8:
-                    pass 
-                case 9:
-                    pass
-                case -10:
-                    print ()
-                    print (f"{magenta}\t\t\t\tWE THANK YOU FOR YOUR VISIT .. HAVE A GREAT DAY AHEAD! {reset}")
-                    break 
-                case _:
-                    print ()
-                    print (f"{blue}it appears that you have typed an {red}invlaid choice{blue} try again {reset}\n")
-            # break ; 
+        print (f"{blue}please select from the following tasks you would like to perform !{reset}")
+        print (f"enter {yellow} 1 {reset} to view student data ")
+        print (f"enter {yellow} 2 {reset} to view the books data ")
+        print (f"enter {yellow} 3 {reset} to view the data of lend out books data ")
+        print (f"enter {yellow} 4 {reset} to update student data ")
+        print (f"enter {yellow} 5 {reset} to update library data ")
+        print (f"enter {yellow} 6 {reset} to update the bdate of the books lend out ")
+        print (f"enter {yellow} 7 {reset} to issue a book ")
+        print (f"enter {yellow} 8 {reset} to return a book ")
+        print (f"enter {yellow} 9 {reset} for records check ")
+        print (f"enter {yellow}-10{reset} to exit the library ")
+        choice = int (input(f"{magenta}enter your desired task number :{yellow}"))
+        print (reset)
+        match choice :
+            case 1:
+                display_student()
+            case 2:
+                display_books() 
+            case 3:
+                display_borrow() 
+            case 4:
+                pass
+            case 5:
+                pass 
+            case 6:
+                pass 
+            case 7:
+                pass 
+            case 8:
+                pass 
+            case 9:
+                pass
+            case -10:
+                print ()
+                print (f"{magenta}\t\t\t\tWE THANK YOU FOR YOUR VISIT .. HAVE A GREAT DAY AHEAD! {reset}")
+                break 
+            case _:
+                print ()
+                print (f"{blue}it appears that you have typed an {red}invlaid choice{blue} try again {reset}\n")
+        # break ; 
         
 cursor.close(); 
         

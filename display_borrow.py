@@ -16,6 +16,7 @@ def display_all_borrow ():
         cursor.execute(query)
         result = cursor.fetchall()
         # print (f"{yellow}{result}{reset}")
+        print (f"{blue}all the borrowed books data are as follws:{reset}")
         formated_table_borrow(result)
     except Exception as err :
         print (f"{red}error : {err}{reset}")
@@ -93,12 +94,12 @@ def check_exists_borrow (book_id , roll):
                         where book_id = %s and roll = %s""" , (book_id, roll))
             result = cursor.fetchall()
             formated_table_borrow ( result )
+            cursor_tuple.close()
         else :
             print (f"{red}student data not found !{reset}")
     except Exception as err :
         print (f"{red}error : {err}{reset}")
-    finally :
-        cursor_tuple.close()
+    
             
             
 # check_exists_borrow (95, 1003)
@@ -128,4 +129,51 @@ def count_no_of_borrowed (name):
         
         
         
-count_no_of_borrowed ("aarav sharma")
+# count_no_of_borrowed ("aarav sharma")
+
+def count_all_copies_of_books_lent ():
+    try :
+        query = """select title , count(roll)
+        from borrow 
+        group by title 
+        order by count(roll) desc;
+        """
+        cursor.execute(query , )
+        print (f"{blue}the no of copies lent out for all books are as follows {reset}")
+        result = cursor.fetchall ()
+        # print (result)
+        if result :
+            print (f"{green}book details found{reset}")
+            print (f"{"title":<30}{"copies lent":<20}")
+            for i in result :
+                print (f"{yellow}{i["title"]:<30}{i["count(roll)"]:<20}{reset}")
+        else :
+            print (f"{red}book details not found {reset}")
+    except Exception as err :
+            print (f"{red}error :{err}{reset}")
+    finally :
+        print ()
+
+
+def count_copies_of_books_lent (title):
+    try :
+        query = """select title , count(roll)
+        from borrow 
+        where title = %s
+        group by title 
+        order by count(roll) desc;
+        """
+        print (f"{blue}the no of copies lent out for the book {reset}{title}{blue} is :")
+        cursor.execute(query , (title, ))
+        result = cursor.fetchall ()
+        if result :
+            print (f"{green}book details found{reset}")
+            print (f"{"title":<30}{"copies lent":<20}")
+            for i in result :
+                print (f"{yellow}{i["title"]:<30}{i["count(roll)"]:<20}{reset}")
+        else :
+            print (f"{red}book details not found {reset}")
+    except Exception as err :
+            print (f"{red}error :{err}{reset}")
+    finally :
+        print ()
